@@ -11,9 +11,10 @@ router.get('/', async (_req: Request, res: Response) => {
       attributes: { exclude: ['password'] }
     });
     res.json(users);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
+  } catch (error) {
+    const message : string = error instanceof Error ? error.message : '❌ Get all users failed';
+    res.status(500).json({ message });
+}
 });
 
 // GET /users/:id - Get a user by id
@@ -26,10 +27,11 @@ router.get('/:id', async (req: Request, res: Response) => {
     if (user) {
       res.json(user);
     } else {
-      res.status(404).json({ message: 'User not found' });
+      res.status(404).json({ message: '❌ User not found' });
     }
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
+  } catch (error) {
+    const message : string = error instanceof Error ? error.message : '❌ Get user by id failed';
+    res.status(500).json({ message });
   }
 });
 
@@ -39,8 +41,8 @@ router.post('/', async (req: Request, res: Response) => {
   try {
     const newUser = await User.create({ username, password });
     res.status(201).json(newUser);
-  } catch (error: any) {
-    res.status(400).json({ message: error.message });
+  } catch (error) {
+    res.status(400).json({ message: error instanceof Error ? error.message : '❌ Create new User failed' });
   }
 });
 
@@ -56,10 +58,10 @@ router.put('/:id', async (req: Request, res: Response) => {
       await user.save();
       res.json(user);
     } else {
-      res.status(404).json({ message: 'User not found' });
+      res.status(404).json({ message: '❌ Cannot update by ID, User not found' });
     }
-  } catch (error: any) {
-    res.status(400).json({ message: error.message });
+  } catch (error) {
+    res.status(400).json({ message: error instanceof Error ? error.message : '❌ Update user failed' });
   }
 });
 
@@ -72,10 +74,10 @@ router.delete('/:id', async (req: Request, res: Response) => {
       await user.destroy();
       res.json({ message: 'User deleted' });
     } else {
-      res.status(404).json({ message: 'User not found' });
+      res.status(404).json({ message: '❌ User ID not found. Cannot delete by ID at this time' });
     }
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
+  } catch (error) {
+    res.status(500).json({ message: error instanceof Error ? error.message : '❌ Unable to delete User by id' });
   }
 });
 

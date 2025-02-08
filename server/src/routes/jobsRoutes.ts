@@ -28,7 +28,7 @@ router.get("/search", (req: Request, res: Response, next: NextFunction) => {
       }
 
       const data = await response.json();
-      await setCache(cacheKey, data, 7200);
+      await setCache(cacheKey, data, 900);
 
       console.log("🌍 Fetched from API");
       return res.json(data);

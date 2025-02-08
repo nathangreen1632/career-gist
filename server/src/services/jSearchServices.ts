@@ -1,15 +1,14 @@
 import { setCache, getCache } from "../cache/redisCacheService.js";
 import JobModel from "../models/JobModel.js";
 
-const JSEARCH_API_URL = "https://jsearch.p.rapidapi.com/search";
-const RAPIDAPI_HOST = "jsearch.p.rapidapi.com";
-const RAPIDAPI_KEY = "4c1c0eb8d1mshf21fead71f6126bp1c4d51jsn398f10a07a9e"; // Move to env file later
+const JSEARCH_API_URL : string = process.env.JSEARCH_API_URL ?? "";
+const RAPIDAPI_HOST : string = process.env.RAPIDAPI_HOST ?? "";
+const RAPIDAPI_KEY : string = process.env.RAPIDAPI_KEY ?? "";
 
 export const fetchJobs = async (query: string): Promise<any> => {
   const cacheKey = `job-search:${query}`;
 
   try {
-    // Check Redis Cache First
     const cachedJobs: string | null = await getCache(cacheKey);
     if (cachedJobs) {
       console.log("📌 Serving jobs from cache...");
@@ -35,9 +34,8 @@ export const fetchJobs = async (query: string): Promise<any> => {
 
     const data = await response.json();
     console.log("✅ Fetched jobs successfully. Caching results...");
-    await setCache(cacheKey, JSON.stringify(data), 3600); // Cache for 1 hour
+    await setCache(cacheKey, JSON.stringify(data), 900);
 
-    // Store in PostgreSQL
     let existingJob = await JobModel.findOne({ where: { query } });
 
     if (existingJob) {
@@ -45,7 +43,6 @@ export const fetchJobs = async (query: string): Promise<any> => {
     } else {
       await JobModel.create({ query, results: JSON.stringify(data) });
     }
-  // Return cached data
     return data;
   } catch (error) {
     console.error("❌ JSearch API failed:", error instanceof Error ? error.message : error);

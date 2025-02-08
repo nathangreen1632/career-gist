@@ -17,9 +17,15 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
-  public async setPassword(password: string) {
-    const saltRounds = 12;
-    this.password = await bcrypt.hash(password, saltRounds);
+  async setPassword(password: string) {
+    try {
+      const salt = await bcrypt.genSalt(12);
+      this.password = await bcrypt.hash(password, salt);
+      console.log("✅ Password hashed successfully.");
+    } catch (error) {
+      console.error("‼️ Error in setPassword:", error);
+      throw new Error("‼️ Password hashing failed.");
+    }
   }
 }
 
