@@ -36,7 +36,7 @@ router.post('/generate', (req: Request, res: Response, next: NextFunction) => {
 
       const generatedText = completion.choices[0].message.content;
 
-      await setCache(cacheKey, generatedText, 900); // Cache for 15 minutes
+      await setCache(cacheKey, generatedText, 3600); // Cache for 1 hour
 
       console.log("🌍 GPT response fetched from API");
       return res.json({ success: true, result: generatedText });

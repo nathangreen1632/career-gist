@@ -1,9 +1,9 @@
 import { setCache, getCache } from "../cache/redisCacheService.js";
 import JobModel from "../models/JobModel.js";
 
-const JSEARCH_API_URL : string = process.env.JSEARCH_API_URL ?? "";
-const RAPIDAPI_HOST : string = process.env.RAPIDAPI_HOST ?? "";
-const RAPIDAPI_KEY : string = process.env.RAPIDAPI_KEY ?? "";
+const JSEARCH_API_URL = "https://jsearch.p.rapidapi.com/search";
+const RAPIDAPI_HOST = "jsearch.p.rapidapi.com";
+const RAPIDAPI_KEY = "4c1c0eb8d1mshf21fead71f6126bp1c4d51jsn398f10a07a9e"; // Move to env file later
 
 export const fetchJobs = async (query: string): Promise<any> => {
   const cacheKey = `job-search:${query}`;
@@ -17,14 +17,14 @@ export const fetchJobs = async (query: string): Promise<any> => {
     }
 
     console.log("🔍 Fetching jobs from JSearch API...");
-    const response = await fetch(`${JSEARCH_API_URL}?query=${query}&num_pages=1`, {
+    const response = await fetch(`${JSEARCH_API_URL}?query=${query}&num_pages=2`, {
       method: "GET",
       headers: {
         "X-RapidAPI-Host": RAPIDAPI_HOST,
         "X-RapidAPI-Key": RAPIDAPI_KEY,
       },
     });
-    console.log(response);
+
     if (!response.ok) {
       console.warn("⚠️ JSearch API returned an error:", response.status);
       return {
@@ -35,7 +35,7 @@ export const fetchJobs = async (query: string): Promise<any> => {
 
     const data = await response.json();
     console.log("✅ Fetched jobs successfully. Caching results...");
-    await setCache(cacheKey, JSON.stringify(data), 900); // Cache for 30 minutes
+    await setCache(cacheKey, JSON.stringify(data), 3600); // Cache for 1 hour
 
     // Store in PostgreSQL
     let existingJob = await JobModel.findOne({ where: { query } });
@@ -47,7 +47,6 @@ export const fetchJobs = async (query: string): Promise<any> => {
     }
   // Return cached data
     return data;
-  //   return { message: "JSearch API is currently unavailable. Please try again later." };
   } catch (error) {
     console.error("❌ JSearch API failed:", error instanceof Error ? error.message : error);
     return { message: "Error fetching jobs. Please try again later." };

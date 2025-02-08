@@ -16,7 +16,7 @@ redisClient.on("end", () : void => console.warn("⚠️ Redis connection closed"
 redisClient.on("reconnecting", (): void => console.log("🔄 Reconnecting to Redis..."));
 
 
-export const setCache : (key : string, value : unknown, ttl?: number) => Promise<void> = async (key: string, value: unknown, ttl: number = 900) : Promise<void> => {
+export const setCache : (key : string, value : unknown, ttl?: number) => Promise<void> = async (key: string, value: unknown, ttl: number = 3600) : Promise<void> => {
   try {
     const data = {
       timestamp: Date.now(),

@@ -2,13 +2,13 @@ import express, { Application } from 'express';
 import dotenv from 'dotenv';
 import logger from './middleware/logger.js';
 import errorHandler from './middleware/errorHandler.js';
-import {userRouter} from "./routes/api/userRoutes";
+import jobRoutes from './routes/jobsRoutes.js';
 import gptAPIRouter from './routes/api/gptRoutes.js';
 import favoriteRoutes from './routes/favorites.js';
 import jSearchRoutes from './routes/api/jSearchRoutes.js';
 import sequelize from './config/connection.js';
 import JobModel from './models/JobModel.js';
-
+import limiter from "./middleware/rateLimiter.js";
 
 dotenv.config();
 
@@ -17,12 +17,12 @@ const PORT: number = Number(process.env.PORT) || 3001;
 
 app.use(express.json());
 app.use(logger);
-app.use(errorHandler);
-app.use('/api/users', userRouter);
+app.use('/api', limiter)
+app.use('/api/jobs', jobRoutes);
 app.use('/api/gpt', gptAPIRouter);
 app.use('/api/favorites', favoriteRoutes);
 app.use('/api/jsearch', jSearchRoutes);
-
+app.use(errorHandler);
 
 (async () => {
   try {

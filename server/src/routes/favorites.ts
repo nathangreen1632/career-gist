@@ -12,7 +12,7 @@ router.post("/add", async (req: Request, res: Response, next: Function): Promise
 
     favorites.push({ jobId, ...jobData });
 
-    await setCache(cacheKey, favorites, 900);
+    await setCache(cacheKey, favorites, 7200);
 
     res.json({ message: "✅ JobModel added to favorites", favorites });
   } catch (error) {
@@ -60,7 +60,7 @@ router.delete("/:userId/:jobId", async (req: Request, res: Response, next: Funct
     if (favorites.length === 0) {
       await deleteCache(cacheKey);
     } else {
-      await setCache(cacheKey, favorites, 900);
+      await setCache(cacheKey, favorites, 7200);
     }
 
     res.json({ message: `👋🏻 Job ${jobId} removed from favorites`, favorites });

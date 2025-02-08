@@ -16,7 +16,7 @@ const cleanupExpiredJobs : () => Promise<void> = async () : Promise<void> => {
       const parsedData = JSON.parse(jobData);
       const age : number = (Date.now() - parsedData.timestamp) / 1000;
 
-      if (age > 900) {
+      if (age > 3600) {
         console.log(`🗑️ Removing expired cache: ${key}`);
         await deleteCache(key);
       }
