@@ -44,7 +44,13 @@ const HomePage: React.FC = () => {
     //This API is the tru API endpoint
     try {
       const response = await fetch(`/api/jsearch/query?query=${query}`);
+
+      console.log('Response status:', response.status);
+
       const data = await response.json();
+
+      console.log('Received data:', data);
+      
       setJobs(data.jobs);
     } catch (error) {
       console.error('Failed to load jobs:', error);
