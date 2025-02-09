@@ -13,20 +13,24 @@ interface JobListProps {
   // JobList is a functional component that accepts jobs and onSave as props.
   // Uses TypeScript’s React Functional Component (React.FC) for type safety.
   //rendering the list of jobs
-const JobList: React.FC<JobListProps> = ({ jobs, onSave }) => (
-  <ul>
-    {jobs.map(job => (
-      <li key={job.id}>
-        <h2>{job.title} at {job.company}</h2>
-        <p>{job.description}</p>
-        <a href={job.url} target="_blank" rel="noopener noreferrer">View Job</a>
-        <button onClick={() => onSave(job)}>Save Job</button>
-      </li>
-    ))}
-  </ul>
-);
-
-export default JobList;
+  const JobList: React.FC<JobListProps> = ({ jobs, onSave }) => {
+    console.log("Rendering jobs in JobList.tsx:", jobs); // ✅ Debugging Log
+    if (!jobs || jobs.length === 0) {
+      return <p>No jobs found.</p>; // ✅ Display message if jobs is empty
+    }
+    return (
+      <ul>
+        {jobs.map(job => (
+          <li key={job.id}>
+            <h2>{job.title} at {job.company}</h2>
+            <p>{job.description}</p>
+            <a href={job.url} target="_blank" rel="noopener noreferrer">View Job</a>
+            <button onClick={() => onSave(job)}>Save Job</button>
+          </li>
+        ))}
+      </ul>
+    );
+  };
 
 
 //Key Points:
