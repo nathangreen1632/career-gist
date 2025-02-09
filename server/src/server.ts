@@ -12,7 +12,8 @@ import JobModel from './models/JobModel.js';
 import limiter from "./middleware/rateLimiter.js";
 import {authenticateToken} from "./middleware/auth.js";
 import cors from 'cors';
-
+import authRoutes from "./routes/auth.js";
+import protectedRoutes from "./routes/protected.js";
 
 
 dotenv.config();
@@ -34,7 +35,8 @@ const PORT: number = parseInt(process.env.PORT ?? "3001", 10);
 
 app.use(express.json());
 app.use(logger);
-app.use('/api', limiter)
+app.use('/auth', authRoutes);
+app.use('/api', protectedRoutes, limiter)
 app.use('/api/users', authenticateToken, userRouter);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/gpt', gptAPIRouter);

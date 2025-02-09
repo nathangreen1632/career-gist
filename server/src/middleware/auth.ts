@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import jwt from 'jsonwebtoken';
 
 interface JwtPayload {
@@ -6,22 +6,22 @@ interface JwtPayload {
 }
 
 export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers.authorization;
+  const token = req.header("Authorization")?.split(" ")[1];
+  if (!token) {
+    res.status(401).json({ error: "Access denied" });
+    return;
+  }
 
-  if (authHeader) {
-    const token : string = authHeader.split(' ')[1];
-
-    const secretKey : string = process.env.JWT_SECRET_KEY ?? '';
-
-    jwt.verify(token, secretKey, (err, user) => {
-      if (err) {
-        return res.sendStatus(403);
-      }
-
-      req.user = user as JwtPayload;
-      return next();
-    });
-  } else {
-    res.sendStatus(401);
+  try {
+    const decoded = jwt.verify(token!, process.env.JJWT_SECRET_KEY as string) as object | JwtPayload;
+    if (typeof decoded === "object" && decoded !== null && "username" in decoded) {
+        req.user = decoded as JwtPayload & { username: string }; // Attach user info to request
+    } else {
+        throw new Error("Invalid token payload");
+    }
+    next();
+  } catch (error) {
+    res.status(403).json({ error: "Invalid token" });
+    return;
   }
 };
