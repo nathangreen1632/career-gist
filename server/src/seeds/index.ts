@@ -4,6 +4,7 @@ import { seedUsers } from './user-seeds.js';
 import { seedApplications } from './application-seeds.js';
 import { seedSkills } from './skill-seeds.js';
 import { seedJobContacts } from './jobContactInfo-seeds.js';
+import { seedJobQueries } from './jobQuery-seeds.js';
 import { sequelize } from '../models/index.js';
 
 const seedAll = async (): Promise<void> => {
@@ -19,6 +20,9 @@ const seedAll = async (): Promise<void> => {
     
     await seedUsers();
     console.log('\n----- USERS SEEDED -----\n');
+
+    await seedJobQueries();
+    console.log('\n----- JOB QUERIES SEEDED -----\n');
     
     await seedApplications();
     console.log('\n----- APPLICATIONS SEEDED -----\n');
