@@ -16,7 +16,7 @@ export class JobModel extends Model<JobQueryAttributes, JobQueryCreationAttribut
   public id!: number;
   public query!: string;
   public results!: string;
-  user_id!: number;
+  public user_id!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -45,7 +45,7 @@ export function JobQueryFactory(sequelize: Sequelize): typeof JobModel {
     },
     {
       sequelize, 
-      tableName: "jobsQuery",
+      tableName: "jobs_query",
       timestamps: true,
   }
   );
