@@ -1,5 +1,5 @@
 import { setCache, getCache } from "../cache/redisCacheService.js";
-import JobModel from "../models/JobQueryModel.js"
+import { JobModel } from "../models/JobQueryModel.js"
 
 const JSEARCH_API_URL : string = process.env.JSEARCH_API_URL ?? "";
 const RAPIDAPI_HOST : string = process.env.RAPIDAPI_HOST ?? "";

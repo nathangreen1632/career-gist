@@ -11,7 +11,7 @@ interface JobQueryAttributes {
 
 interface JobQueryCreationAttributes extends Optional<JobQueryAttributes, "id"> {}
 
-class JobModel extends Model<JobQueryAttributes, JobQueryCreationAttributes> implements JobQueryAttributes {
+export class JobModel extends Model<JobQueryAttributes, JobQueryCreationAttributes> implements JobQueryAttributes {
   public id!: number;
   public query!: string;
   public results!: string;
@@ -46,7 +46,7 @@ export function JobQueryFactory(sequelize: Sequelize): typeof JobModel {
   return JobModel;
 }
 
-export default JobModel;
+
 
 
 

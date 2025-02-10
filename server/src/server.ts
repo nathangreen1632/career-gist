@@ -8,7 +8,7 @@ import gptAPIRouter from './routes/api/gptRoutes.js';
 import favoriteRoutes from './routes/favorites.js';
 import jSearchRoutes from './routes/api/jSearchRoutes.js';
 import sequelize from './config/connection.js';
-import JobModel from './models/JobQueryModel.js';
+//import JobModel from './models/JobQueryModel.js';
 import limiter from "./middleware/rateLimiter.js";
 import {authenticateToken} from "./middleware/auth.js";
 import cors from 'cors';
@@ -49,12 +49,12 @@ app.use(errorHandler);
   } catch (error) {
     console.error("❌ Database connection failed:", error);
   }
-  try {
-    await JobModel.sync();
-    console.log("✅ JobModel synced successfully.");
-  } catch (error) {
-    console.error("❌ JobModel sync failed:", error);
-  }
+  // try {
+  //   await JobModel.sync();
+  //   console.log("✅ JobModel synced successfully.");
+  // } catch (error) {
+  //   console.error("❌ JobModel sync failed:", error);
+  // }
   try {
     await sequelize.sync();
     console.log("✅ All models were synchronized successfully.");
