@@ -5,6 +5,10 @@
     { "path": "./tsconfig.node.json"}
   ],
     "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+          "@/shared/*": ["../shared/*"],
+      },
         "target": "ES2020",
         "module": "ESNext",
         "useDefineForClassFields": true,

@@ -11,6 +11,7 @@ import React, { useState } from 'react';
 import SearchForm from '../components/SearchForm';
 import JobList from '../components/JobList';
 import Spinner from '../components/Spinner';
+import type { JobSearchResponse } from "@/shared/interfaces/jobSearch";
 import { Job } from '../types/types';
 import '../App.css';
 import './HomePage.css';
