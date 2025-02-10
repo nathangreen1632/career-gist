@@ -8,6 +8,7 @@ import { SkillFactory } from './skillsModel.js';
 import { JobFactory } from './jobsModel.js';
 import { ApplicationFactory } from './applicationsModel.js';
 import { UserFactory } from './userModel.js';
+import { JobQueryFactory } from './JobQueryModel.js';
 
 const sequelize = process.env.DB_URL
   ? new Sequelize(process.env.DB_URL)
@@ -25,6 +26,7 @@ const Skill = SkillFactory(sequelize);
 const Job = JobFactory(sequelize);
 const Application = ApplicationFactory(sequelize);
 const User = UserFactory(sequelize);
+const JobModel = JobQueryFactory(sequelize);
 
 Company.hasMany(Job, { foreignKey: 'company_id', onUpdate: 'CASCADE', onDelete: 'CASCADE' });
 Job.belongsTo(Company, { foreignKey: 'company_id', as: 'company' });
@@ -40,6 +42,10 @@ Application.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
 Job.hasMany(Skill, { foreignKey: 'job_id', onUpdate: 'CASCADE', onDelete: 'CASCADE' });
 Skill.belongsTo(Job, { foreignKey: 'job_id', as: 'job' });
+
+User.hasMany(JobModel, { foreignKey: 'user_id', onUpdate: 'CASCADE', onDelete: 'CASCADE' });
+JobModel.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
 
 export { sequelize, Company, JobContactInfo, Skill, Job, Application, User };
 
