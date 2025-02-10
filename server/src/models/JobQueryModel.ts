@@ -5,6 +5,7 @@ interface JobQueryAttributes {
   id: number;
   query: string;
   results: string;
+  user_id: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -15,6 +16,7 @@ export class JobModel extends Model<JobQueryAttributes, JobQueryCreationAttribut
   public id!: number;
   public query!: string;
   public results!: string;
+  user_id!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -36,6 +38,10 @@ export function JobQueryFactory(sequelize: Sequelize): typeof JobModel {
         type: DataTypes.TEXT, 
         allowNull: false,
       },
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
     },
     {
       sequelize, 
