@@ -41,7 +41,7 @@ export const fetchJobs = async (query: string): Promise<any> => {
     if (existingJob) {
       await existingJob.update({ results: JSON.stringify(data) });
     } else {
-      await JobModel.create({ query, results: JSON.stringify(data) });
+      await JobModel.create({ query, results: JSON.stringify(data), user_id: 1 }); // Replace 1 with the appropriate user_id
     }
   // Return cached data
     return data;
