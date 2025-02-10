@@ -47,6 +47,6 @@ User.hasMany(JobModel, { foreignKey: 'user_id', onUpdate: 'CASCADE', onDelete: '
 JobModel.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
 
-export { sequelize, Company, JobContactInfo, Skill, Job, Application, User };
+export { sequelize, Company, JobContactInfo, Skill, Job, Application, User, JobModel };
 
 
