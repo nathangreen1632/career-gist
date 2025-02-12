@@ -8,7 +8,7 @@ const retrieveJobs = async (): Promise<JobDetails[]> => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${Auth.getToken()}`
-        }
+        },
       });
   
     const data = await response.json();
@@ -24,13 +24,13 @@ const retrieveJobs = async (): Promise<JobDetails[]> => {
   }
 };
 
-const retrieveJobById = async (id: number): Promise<JobDetails> => {
+const retrieveJobById = async (job_id: string): Promise<JobDetails> => {
     try {
-      const response = await fetch(`/api/jobs/${id}`, {
+      const response = await fetch(`/api/jobs/${job_id}`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${Auth.getToken()}`
-        }
+        },
       });
   
       const data = await response.json();
@@ -45,7 +45,7 @@ const retrieveJobById = async (id: number): Promise<JobDetails> => {
     }
   };
 
-  const saveJob = async (job: JobDetails): Promise<JobDetails> => {
+  const SavedJobs = async (job: JobDetails): Promise<JobDetails> => {
     try {
       const response = await fetch('/api/jobs', {
         method: 'POST',
@@ -67,6 +67,29 @@ const retrieveJobById = async (id: number): Promise<JobDetails> => {
       return Promise.reject('Could not save job');
     }
   };
+
+  const MarkAsApplied = async (job_id: string): Promise<void> => {
+    try {
+      const response = await fetch(`/api/jobs/applied/${job_id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Auth.getToken()}`
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to mark job as applied!');
+      }
+  
+      return;
+    } catch (err) {
+      console.error('Error marking job as applied:', err);
+      return Promise.reject('Could not mark job as applied');
+    }
+  };
+  
+
   
 const retrieveSavedJobs = async (): Promise<JobDetails[]> => {
   try {
@@ -76,7 +99,7 @@ const retrieveSavedJobs = async (): Promise<JobDetails[]> => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${Auth.getToken()}`
-        }
+        },
       }
     );
 
@@ -93,16 +116,16 @@ const retrieveSavedJobs = async (): Promise<JobDetails[]> => {
   }
 };
 
-const deleteJob = async (jobId: number): Promise<ApiMessage> => {
+const deleteJob = async (job_id: string): Promise<ApiMessage> => {
   try {
     const response = await fetch(
-      `/api/jobs/${jobId}`, 
+      `/api/jobs/${job_id}`, 
       {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${Auth.getToken()}`
-        }
+        },
       }
     );
 
@@ -119,4 +142,4 @@ const deleteJob = async (jobId: number): Promise<ApiMessage> => {
   }
 };
 
-export { retrieveJobs, retrieveJobById, saveJob, retrieveSavedJobs, deleteJob };
+export { retrieveJobs, retrieveJobById, SavedJobs, MarkAsApplied, retrieveSavedJobs, deleteJob };

@@ -6,12 +6,12 @@ import styles from './JobList.module.css';
 interface JobListProps {
   jobs: JobDetails[];
   onSave: (job: JobDetails) => void;
-  onRemove: (job_id: string) => void; 
+  onRemoveJob: (job_id: string) => void; 
   onMarkAsApplied: (job_id: string) => void;
   isLoggedIn: boolean;
 }
 
-const JobList: React.FC<JobListProps> = ({ jobs, onSave, onRemove, onMarkAsApplied, isLoggedIn }) => {
+const JobList: React.FC<JobListProps> = ({ jobs, onSave, onRemoveJob, onMarkAsApplied, isLoggedIn }) => {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
 
   const toggleJobDescription = (job_id: string) => {
@@ -46,7 +46,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, onSave, onRemove, onMarkAsAppli
               <>
                 <button className={styles.button} onClick={() => onSave(jobDetails)}>Save Job</button>
                 <button className={styles.button} onClick={() => onMarkAsApplied(jobDetails.job_id)}>Mark as Applied</button>
-                <button className={styles.button} onClick={() => onRemove(jobDetails.job_id)}>Remove</button>
+                <button className={styles.button} onClick={() => onRemoveJob(jobDetails.job_id)}>Remove</button>
               </>
             )}
           </li>

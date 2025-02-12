@@ -4,6 +4,7 @@ import JobList from '../components/JobList';
 import Spinner from '../components/Spinner';
 import logo from '../assets/CareerGist.png';
 import type { JobDetails, JobSearchResponse } from "../types/interface/jobSearch";
+import { SavedJobs, MarkAsApplied, deleteJob } from '../api/jobsAPI';
 import '../App.css';
 import './HomePage.css';
 
@@ -71,37 +72,25 @@ const HomePage: React.FC = () => {
 setLoading(false);
 };
 
+  // ✅ Save job using `SavedJobs()`
   const handleSaveJob = async (job: JobDetails) => {
     if (!isLoggedIn) return alert('Please log in to save jobs.');
+
     try {
-      const response = await fetch('/api/save-job', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(job),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to save job: ${response.statusText}`);
-      }
-
-      alert(`Job saved: ${job.job_title} at ${job.employer_name}`);
+        await SavedJobs(job); // ✅ Now using the reusable function
+        alert(`Job saved: ${job.job_title} at ${job.employer_name}`);
     } catch (error) {
-      console.error('Error saving job:', error);
-      alert('Error saving job. Try again later.');
+        console.error('Error saving job:', error);
+        alert('Error saving job. Try again later.');
     }
-  };
+};
 
+
+  // ✅ Mark job as applied using `MarkAsApplied()`
   const handleMarkAsApplied = async (job_id: string) => {
     try {
-      const response = await fetch(`/api/mark-as-applied/${job_id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to mark job as applied: ${response.statusText}`);
-      }
-
+      console.log("Marking job as applied:", job_id);
+      await MarkAsApplied(job_id); // ✅ Passes only `job_id` as expected
       alert(`Marked job ${job_id} as applied!`);
     } catch (error) {
       console.error('Error marking job as applied:', error);
@@ -109,16 +98,12 @@ setLoading(false);
     }
   };
 
+
+  // ✅ Remove job using `deleteJob()`
   const handleRemoveJob = async (job_id: string) => {
     try {
-      const response = await fetch(`/api/remove-job/${job_id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to remove job: ${response.statusText}`);
-      }
-
+      console.log("Removing job:", job_id);
+      await deleteJob(job_id); // ✅ Calls function from jobsAPI.tsx
       alert(`Removed job ${job_id} from saved jobs.`);
     } catch (error) {
       console.error('Error removing job:', error);
@@ -142,7 +127,7 @@ setLoading(false);
           jobs={jobs}
           onSave={handleSaveJob}
           onMarkAsApplied={handleMarkAsApplied}
-          onRemove={handleRemoveJob}
+          onRemoveJob={handleRemoveJob}
           isLoggedIn={isLoggedIn} // ✅ Pass login state to JobList
         />
       ) : (
