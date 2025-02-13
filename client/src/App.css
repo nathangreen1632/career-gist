@@ -91,14 +91,15 @@ ul.nav.nav-tabs {
   }
 }
 
-
 .search-container {
   display: flex; /* Use flexbox to align children */
-  padding: 5px;
+  padding: 10px;
   border-radius: 2px;
   align-items: center; /* Align children vertically */
-  justify-content: flex-end; /* Align children to the right */
-  gap: 10px; /* Adds space between the input and the button */
+  justify-content: center;
+  gap: 20px; /* Adds space between the input and the button */
+  width: 100%; /* Ensures full width*/
+  text-align: left;
 }
 
 .search {
@@ -113,11 +114,14 @@ ul.nav.nav-tabs {
   border-radius: 5px;
   display: inline-block;
   border: none;
-  font-size: 12px; /* Example size */
-  min-width: 100px; /* Ensures a minimum width */
+  font-size: 14px; /* Example size */
+  min-width: 120px; /* Ensures a minimum width */
 }
 
 .search-input {
+  flex: 1; /* Ensures the input takes up the remaining space */
+  max-width: 100%; /* Ensures the input does not exceed the container width */
+  min-width: 250px; /* Ensures a minimum width */
   padding: 10px;
   border: 1px solid #ced4da;
   border-radius: 4px;

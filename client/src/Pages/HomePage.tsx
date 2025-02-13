@@ -12,6 +12,8 @@ const HomePage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // ✅ Track login state
+  const [isSearching, setIsSearching] = useState<boolean>(false); // ✅ Track search state
+  const [fetchedFromAPI, setFetchedFromAPI] = useState<boolean>(false); // ✅ Track if data was fetched from the API
 
   useEffect(() => {
     // Check if the user is logged in when the component mounts
@@ -27,6 +29,9 @@ const HomePage: React.FC = () => {
   const handleSearch = async (query: string) => {
     setLoading(true);
     setError(null);
+    setIsSearching(true); //Mark that a search is in progress
+    setFetchedFromAPI(true); // ✅ Mark that data was fetched from the API
+    setJobs([]); // ✅ Clears previous jobs before fetching new ones
 
     try {
       const response = await fetch(`/api/jsearch/query?query=${encodeURIComponent(query)}`, {
@@ -61,16 +66,22 @@ const HomePage: React.FC = () => {
     console.log("Transformed Jobs:", transformedJobs);
 
     setJobs(transformedJobs); // strictly following API response structure
+    setFetchedFromAPI(true); // ✅ Mark that data was fetched from the API
+
   } else {
-    throw new Error("Unexpected response format");
+    throw new Error("Sorry! No jobs found. Try a different keyword and/or location.");
   }
 } catch (error) {
   console.error("Failed to load jobs:", error);
-  setError("Unable to fetch jobs. Please try again later.");
+  setError("Unable to fetch jobs at the moment. Please try again later.");
 }
 setLoading(false);
 };
 
+
+// This is for future implementation and enhancement: Save Job, Mark as Applied, and Remove Job
+
+//needs to have real api endpoints for Save Job, Mark as Applied, and Remove Job in the future
   const handleSaveJob = async (job: JobDetails) => {
     if (!isLoggedIn) return alert('Please log in to save jobs.');
     try {
@@ -126,29 +137,31 @@ setLoading(false);
     }
   };
 
-  return (
-    <div className="header-container">
-      <img className="logo" src={logo} alt="CareerGist Logo" />
-      <h1 className="homepage-h1">Welcome to CareerGist</h1>
-      <h2 className="homepage-h2">Because Searching for Jobs Should be Easy.</h2>
 
-      <SearchForm onSearch={handleSearch} loading={loading} />
+return (
+  <div className="header-container">
+    <img className="logo" src={logo} alt="CareerGist Logo" />
+    <h1 className="homepage-h1">Welcome to CareerGist</h1>
+    <h2 className="homepage-h2">Because Searching for Jobs Should be Easy.</h2>
 
-      {loading && <Spinner />}
-      {error && <p className="error">{error}</p>}
+    <SearchForm onSearch={handleSearch} loading={loading} />
 
-      {jobs?.length > 0 ? (
-        <JobList
-          jobs={jobs}
-          onSave={handleSaveJob}
-          onMarkAsApplied={handleMarkAsApplied}
-          onRemove={handleRemoveJob}
-          isLoggedIn={isLoggedIn} // ✅ Pass login state to JobList
-        />
-      ) : (
-        !loading && <p>No results found.</p>
-      )}
-    </div>
+    {loading && <Spinner />}
+    {error && <p className="error">{error}</p>}
+
+    {!loading && isSearching && jobs.length === 0 && <p className="no-results">No results found. Try a different keyword or location.</p>}
+
+
+    {jobs.length > 0 && (
+    <JobList
+      jobs={jobs}
+      onSave={handleSaveJob}
+      onMarkAsApplied={handleMarkAsApplied}
+      onRemove={handleRemoveJob}
+      isLoggedIn={isLoggedIn}
+    />
+    )}
+  </div>
   );
 };
 
